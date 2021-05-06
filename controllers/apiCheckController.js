@@ -6,7 +6,7 @@
 
  const checkPostApi = (req, res) => {
    res.send({
-     message: 'Api post is working'
+     message: `Sent test field with value - ${req.body.test}. ${req.middlewareTest}`
    })
  }
 
