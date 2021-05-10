@@ -1,16 +1,28 @@
 const express = require('express')
 // body parser leidzia duomenis gauti ir siusti json formatu
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 
 const router = require('./routes/routes')
 
+
+
+mongoose.connect('mongodb://localhost/twitterDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+})
+
+const db = mongoose.connection
+
+db.on('error', console.error.bind(console, 'connection error'))
+db.once('open', () => console.log('Logged into database'))
+
+
+
 const app = express();
-
-
 // app.use suveikia pries visas kitas zemiau aprasytas funkcijas
 app.use(bodyParser.json())
-
-
 // norint pasiekti router turim kreiptis i localhost:3000/api/v1
 app.use('/api/v1', router)
 

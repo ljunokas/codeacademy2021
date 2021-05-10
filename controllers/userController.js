@@ -1,8 +1,23 @@
-let user;
+const User = require('../models/userModel')
 
-const signUp = (req, res) => {
-  user = req.body
-  res.send(req.body)
+
+const signUp = async (req, res) => {
+  try {
+    const user = new User({
+      email: req.body.email,
+      password: req.body.password
+    })
+    let newUser = await user.save()
+    res.send(newUser)
+
+  } catch (e) {
+    res.status(400).send(e)
+  }
+}
+
+const getAllUsers = async (req, res) => {
+  const allUsers = await User.find()
+  res.send(allUsers)
 }
 
 // req (request - uzklausa)
@@ -41,5 +56,6 @@ module.exports = {
   signUp,
   signIn,
   currentUser,
-  logOut
+  logOut,
+  getAllUsers
 }

@@ -8,11 +8,7 @@ const {
   checkApi,
   checkPostApi
 } = require('../controllers/apiCheckController')
-const {
-  getTweets,
-  createTweet
-} = require('../controllers/tweetController')
-
+const tweetController = require('../controllers/tweetController')
 const userController = require('../controllers/userController')
 
 // galima "chainint" (det i grandine) requesto metodus
@@ -23,8 +19,10 @@ router.route('/apiCheck')
 
 // tweets
 router.route('/tweet')
-  .post(createTweet)
-  .get(getTweets)
+  .post(tweetController.createTweet)
+  .get(tweetController.getTweets)
+router.route('/tweet/like')
+  .post(tweetController.likeTweet)
 
 
 // user
@@ -32,6 +30,8 @@ router.route('/user/signUp').post(userController.signUp)
 router.route('/user/signIn').post(userController.signIn)
 router.route('/user/currentUser').get(userController.currentUser)
 router.route('/user/logOut').post(userController.logOut)
+router.route('/user/getAllUsers').get(userController.getAllUsers)
+
 
 
 
