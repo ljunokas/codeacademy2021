@@ -1,12 +1,17 @@
+const bcrypt = require('bcrypt')
 const User = require('../models/userModel')
 
 
 const signUp = async (req, res) => {
   try {
+    // bcrypt pries saugojant i duomenu baze uzhashinam passworda, ir jau saugom hasha vietoj tikrojo passwordo
+    let hash = bcrypt.hashSync(req.body.password, 10)
+
     const user = new User({
       email: req.body.email,
-      password: req.body.password
+      password: hash
     })
+
     let newUser = await user.save()
     res.send(newUser)
 
@@ -31,13 +36,27 @@ const getAllUsers = async (req, res) => {
 // res (response - atsakymas)
 // res.send() siunciam informacija atgal uzsakovui (front-end)
 
-const signIn = (req, res) => {
-  if (req.body.email !== user.email) {
-    res.send('Wrong email')
-  } else if (req.body.password !== user.password) {
-    res.send('Wrong password')
-  } else {
-    res.send('Success')
+const signIn = async (req, res) => {
+  try {
+    // paemam useri is database pagal email, nes emailas yra unikalus
+    let user = await User.findOne({
+      email: req.body.email
+    })
+    // siunciam error jeigu buvo nerastas useris su tokiu emailu
+    if (!user) throw {
+      message: 'Wrong email'
+    }
+    // patikrinam ar siustas userio passwordas kai jis yra uzhashintas sutampa su duombazej hashintu passwordu
+    let passwordMatch = bcrypt.compareSync(req.body.password, user.password)
+    // jei ne siunciam error
+    if (!passwordMatch) throw {
+      message: 'Wrong password'
+    }
+    // jei viskas ok siunciam userioobjekta
+    res.send(user)
+
+  } catch (e) {
+    res.status(400).send(e)
   }
 }
 

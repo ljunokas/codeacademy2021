@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const bcrypt = require('mongoose')
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -14,6 +14,30 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  }
+}, {
+  toJSON: {
+    transform(doc, ret) {
+      delete ret.password
+    }
+  }
+})
+
+// schema pre leidzia paleisti funckija prie konkretu ivyki, siuo atveju pries saugant objekata DB
+userSchema.pre('save', function(next) {
+  //naudojam paprasta funckoja. This yra useris kuris bus saugomas DB
+  let user = this
+  // isModified grazina true arba false jeigu nustatyas parametras yra keiciamas (turi nauja reiksme)
+  if (user.isModified('password')) {
+    // hashinam nauja slaptazodi
+    let hash = bcrypt.hashSync(user.password, 10)
+    // priskiriam hashinta slaptazodi vartotojui
+    user.password = hash
+    // leidziam toliau saugoti useri DB
+    next()
+  } else {
+    // leidziam toliau saugoti useri DB
+    next()
   }
 })
 
