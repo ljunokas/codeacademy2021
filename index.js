@@ -1,9 +1,17 @@
+require('dotenv').config()
+
 const express = require('express')
 // body parser leidzia duomenis gauti ir siusti json formatu
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-
+const cors = require('cors')
 const router = require('./routes/routes')
+
+const corsOptions = {
+  allowedHeaders: ['twitterauth']
+}
+
+
 
 
 
@@ -21,10 +29,13 @@ db.once('open', () => console.log('Logged into database'))
 
 
 const app = express();
+// cors leidzia visiems kreiptis i serveri, bei nustatyti custom headers
+app.use(cors(corsOptions))
 // app.use suveikia pries visas kitas zemiau aprasytas funkcijas
 app.use(bodyParser.json())
 // norint pasiekti router turim kreiptis i localhost:3000/api/v1
 app.use('/api/v1', router)
+
 
 
 

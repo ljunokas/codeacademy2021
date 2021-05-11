@@ -12,9 +12,11 @@ const getTweets = async (req, res) => {
 const createTweet = async (req, res) => {
   // su try/catch turim galimybe isgaudyti klaidas ir nepergyvent del serverio uzluzimo
   try {
+    console.log(req.user)
     // pagal modeli kuri apsiraseme kuriame nauja dokumenta
     const tweet = new Tweet({
-      content: req.body.content
+      content: req.body.content,
+      userId: req.user._id
     })
     //sukurta dokumenta saugome duombazeje
     let savedTweet = await tweet.save()

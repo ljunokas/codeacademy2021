@@ -10,6 +10,7 @@ const {
 } = require('../controllers/apiCheckController')
 const tweetController = require('../controllers/tweetController')
 const userController = require('../controllers/userController')
+const authenticateMiddleware = require('../middleware/authenticate')
 
 // galima "chainint" (det i grandine) requesto metodus
 // pridedame middleware "testMiddleware" funckija prie get metodo
@@ -19,7 +20,7 @@ router.route('/apiCheck')
 
 // tweets
 router.route('/tweet')
-  .post(tweetController.createTweet)
+  .post(authenticateMiddleware.authenticate, tweetController.createTweet)
   .get(tweetController.getTweets)
 router.route('/tweet/like')
   .post(tweetController.likeTweet)

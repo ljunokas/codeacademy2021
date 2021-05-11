@@ -1,21 +1,23 @@
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
-
+const Session = require('../models/sessionModel')
 
 const signUp = async (req, res) => {
   try {
     // bcrypt pries saugojant i duomenu baze uzhashinam passworda, ir jau saugom hasha vietoj tikrojo passwordo
-    let hash = bcrypt.hashSync(req.body.password, 10)
+
 
     const user = new User({
       email: req.body.email,
-      password: hash
+      password: req.body.password
     })
 
     let newUser = await user.save()
     res.send(newUser)
 
   } catch (e) {
+    console.log(e)
     res.status(400).send(e)
   }
 }
@@ -48,12 +50,32 @@ const signIn = async (req, res) => {
     }
     // patikrinam ar siustas userio passwordas kai jis yra uzhashintas sutampa su duombazej hashintu passwordu
     let passwordMatch = bcrypt.compareSync(req.body.password, user.password)
+
+    console.log(passwordMatch, req.body.password, user.password)
     // jei ne siunciam error
     if (!passwordMatch) throw {
       message: 'Wrong password'
     }
+    //kuriam sessijos tokena
+
+    let token = jwt.sign({
+      id: user._id,
+      role: 'user'
+    }, process.env.JWT_PASSWORD)
+
+
+
+    let session = new Session({
+      sessionToken: token,
+      expires: new Date().setMonth(new Date().getMonth() + 1)
+    })
+
+    await session.save()
+
+
+
     // jei viskas ok siunciam userioobjekta
-    res.send(user)
+    res.header('twitterauth', token).send(user)
 
   } catch (e) {
     res.status(400).send(e)

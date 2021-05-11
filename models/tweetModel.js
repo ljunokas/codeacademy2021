@@ -18,6 +18,11 @@ const tweetSchema = new mongoose.Schema({
     type: Date,
     // jeigu saugome objekta ir nenustatome reiksmes, i duombaze isiraso default reiksme
     default: Date.now
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   }
 })
 
