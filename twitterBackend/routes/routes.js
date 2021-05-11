@@ -29,8 +29,8 @@ router.route('/tweet/like')
 // user
 router.route('/user/signUp').post(userController.signUp)
 router.route('/user/signIn').post(userController.signIn)
-router.route('/user/currentUser').get(userController.currentUser)
-router.route('/user/logOut').post(userController.logOut)
+router.route('/user/currentUser').get(authenticateMiddleware.authenticate, userController.currentUser)
+router.route('/user/logOut').post(authenticateMiddleware.authenticate, userController.logOut)
 router.route('/user/getAllUsers').get(userController.getAllUsers)
 
 

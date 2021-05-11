@@ -5,14 +5,14 @@ let tweets = [];
 
 const getTweets = async (req, res) => {
   // paemam modeli. Modelis turi savyje funckijas. Viena ju yra find(). Gauti visus irasus (dokumentus) is Tweets collection
-  let allTweets = await Tweet.find()
+  let allTweets = await Tweet.find().populate('userId')
   res.send(allTweets)
 }
 
 const createTweet = async (req, res) => {
   // su try/catch turim galimybe isgaudyti klaidas ir nepergyvent del serverio uzluzimo
   try {
-    console.log(req.user)
+
     // pagal modeli kuri apsiraseme kuriame nauja dokumenta
     const tweet = new Tweet({
       content: req.body.content,

@@ -8,7 +8,8 @@ const cors = require('cors')
 const router = require('./routes/routes')
 
 const corsOptions = {
-  allowedHeaders: ['twitterauth']
+  allowedHeaders: ['twitterauth', 'Content-Type'],
+  exposedHeaders: ['twitterauth']
 }
 
 

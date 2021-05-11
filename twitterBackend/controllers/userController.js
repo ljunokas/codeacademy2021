@@ -84,13 +84,23 @@ const signIn = async (req, res) => {
 
 
 const currentUser = (req, res) => {
-  res.send(user)
+  res.send(req.user)
 }
-const logOut = (req, res) => {
-  user = null
-  res.send({
-    message: 'Successfull log out'
-  })
+
+const logOut = async (req, res) => {
+  try {
+    let token = req.sessionToken
+    await token.remove()
+    res.send({
+      message: 'Success'
+    })
+  } catch (e) {
+    res.status(400).send({
+      message: 'Something went wrong'
+    })
+  }
+
+
 }
 
 module.exports = {

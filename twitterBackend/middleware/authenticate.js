@@ -20,6 +20,7 @@ const authenticate = async (req, res, next) => {
     if (!user) throw 'Error'
     //siunciam userio objekta i kita funkcija
     req.user = user
+    req.sessionToken = session
     next()
   } catch (e) {
     res.status(401).send({
