@@ -24,11 +24,15 @@ document.getElementById('form').addEventListener('submit', async (e) => {
     if (response.status != 200) throw await response.json()
     //is response headerio pasiemam tokena kuri siunciam is serverio
     let token = response.headers.get('twitterauth')
+
     //tokena issaugom localstorage (narsykleje)
     localStorage.setItem('twitterauth', token)
+    //Issaugom userio duomenis localstorate
+    localStorage.setItem('twitter-user', await JSON.stringify(await response.json()))
     // siunciam useri i homepage
     window.location.href = './'
   } catch (e) {
+    console.log(e)
     alert(e.message)
   }
 

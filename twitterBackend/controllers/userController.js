@@ -78,6 +78,7 @@ const signIn = async (req, res) => {
     res.header('twitterauth', token).send(user)
 
   } catch (e) {
+    console.log(e)
     res.status(400).send(e)
   }
 }
@@ -103,10 +104,15 @@ const logOut = async (req, res) => {
 
 }
 
+const updateUserInfo = async (req, res) => {
+  console.log(req.file)
+}
+
 module.exports = {
   signUp,
   signIn,
   currentUser,
   logOut,
-  getAllUsers
+  getAllUsers,
+  updateUserInfo
 }

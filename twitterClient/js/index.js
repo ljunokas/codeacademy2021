@@ -1,10 +1,16 @@
 let token;
 let url = 'http://localhost:3000/api/v1'
+let user;
 
 window.addEventListener('DOMContentLoaded', () => {
   token = localStorage.getItem('twitterauth')
+
   if (!token) return window.location.href = './login'
+
+  user = JSON.parse(localStorage.getItem('twitter-user'))
+
   getAllTweets()
+  setUpNavBar()
 })
 
 const getAllTweets = async () => {
@@ -15,6 +21,11 @@ const getAllTweets = async () => {
   let tweets = await response.json()
   console.log(tweets)
   showTweets(tweets)
+
+}
+
+const setUpNavBar = async () => {
+  document.getElementById('profileButton').innerHTML = user.email
 
 }
 
@@ -31,7 +42,7 @@ const showTweets = (tweets) => {
             <p class="card-text">
               ${tweet.content}</p>
             <div>
-              <i class="bi bi-heart-fill"></i>
+              <i class="bi bi-heart-fill" onclick='likeTweet(this, "${tweet._id}")'></i>
 
               <span>${tweet.likesCount}</span>
               <span>Likes</span>
@@ -43,4 +54,38 @@ const showTweets = (tweets) => {
     let cardContainer = document.getElementById('cardContainer')
     cardContainer.innerHTML += card
   }
+}
+
+const likeTweet = async (el, id) => {
+
+  let count = el.nextElementSibling.innerHTML
+  el.nextElementSibling.innerHTML = parseInt(count) + 1
+
+  let body = {
+    tweetId: id
+  }
+  fetch(`${url}/tweet/like`, {
+    method: "POST",
+    headers: {
+      "Content-Type": 'application/json',
+      "twitterauth": token
+    },
+    body: JSON.stringify(body)
+  })
+}
+
+const logOut = async () => {
+  let response = await fetch(`${url}/user/logOut`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'twitterauth': token
+    }
+  })
+
+  localStorage.removeItem('twitterauth')
+  localStorage.removeItem('twitter-user')
+
+  window.location.href = './login.html'
+
 }

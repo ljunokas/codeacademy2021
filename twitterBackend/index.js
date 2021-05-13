@@ -33,7 +33,17 @@ const app = express();
 // cors leidzia visiems kreiptis i serveri, bei nustatyti custom headers
 app.use(cors(corsOptions))
 // app.use suveikia pries visas kitas zemiau aprasytas funkcijas
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+app.use(bodyParser.json({
+  limit: '50mb'
+}))
+
+
+
+
 // norint pasiekti router turim kreiptis i localhost:3000/api/v1
 app.use('/api/v1', router)
 
