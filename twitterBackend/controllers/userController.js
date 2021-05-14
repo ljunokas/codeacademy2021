@@ -105,7 +105,22 @@ const logOut = async (req, res) => {
 }
 
 const updateUserInfo = async (req, res) => {
-  console.log(req.file)
+  // pasiemam useri, kuri bunam jau pasieme authenticate middleware funckjoj
+
+  let user = req.user
+  // patikrinam ar siustas yra failas
+  if (req.file) {
+    console.log(2)
+    // pakeiciam userio profile image
+    user.profileImage = req.file.path
+    // issaugom
+    console.log(3)
+    await user.save()
+    console.log(4)
+  }
+  console.log(5)
+  //siunciam userio objekta
+  res.send(user)
 }
 
 module.exports = {

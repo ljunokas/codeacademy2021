@@ -10,10 +10,13 @@ window.addEventListener('DOMContentLoaded', () => {
   user = JSON.parse(localStorage.getItem('twitter-user'))
 
   setUpNavBar()
+  getMyTweets()
 })
 
 const setUpNavBar = async () => {
   document.getElementById('profileButton').innerHTML = user.email
+  console.log(user)
+  if (user.profileImage) document.getElementById('navProfileImage').src = user.profileImage
 }
 
 const logOut = async () => {
@@ -33,20 +36,40 @@ const logOut = async () => {
 }
 
 const updateProfile = async () => {
+  console.log(1)
   let profileImgElement = document.getElementById('profileImageInput')
 
   const formData = new FormData()
 
   formData.append('avatar', profileImgElement.files[0])
-  formData.append('test', 'test')
+  try {
 
-  let response = await fetch(`${url}/user/updateUserInfo`, {
-    method: 'POST',
+    let response = await fetch(`${url}/user/updateUserInfo`, {
+      method: 'POST',
+      headers: {
+        'twitterauth': token
+      },
+      body: formData
+    })
+
+    if (response.status != 200) throw await respnse.json()
+    user = await response.json()
+    localStorage.setItem('twitter-user', JSON.stringify(user))
+  } catch (e) {
+
+  }
+}
+
+const getMyTweets = async () => {
+  let response = await fetch(`${url}/myTweets`, {
+    method: 'GET',
     headers: {
+      'Content-Type': 'application/json',
       'twitterauth': token
-    },
-    body: formData
+    }
   })
 
+  let data = await response.json()
+  console.log(data)
 
 }

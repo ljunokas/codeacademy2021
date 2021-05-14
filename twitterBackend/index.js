@@ -41,6 +41,9 @@ app.use(bodyParser.json({
   limit: '50mb'
 }))
 
+// pirmas argumentas,koki url turime nurodyti kad pasiekti failus, antras koks yra folderioi pavadinimas pas mus serveryje kuri norime padaryti public
+app.use('/uploads', express.static('uploads'))
+
 
 
 

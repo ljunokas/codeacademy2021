@@ -15,11 +15,16 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  profileImage: {
+    type: String,
   }
 }, {
   toJSON: {
     transform(doc, ret) {
       delete ret.password
+      // paziurim ar priskirtas nuotraukos url, jei taip pridedam serverio url.
+      if (ret.profileImage) ret.profileImage = 'http://localhost:3000/' + ret.profileImage
     }
   }
 })

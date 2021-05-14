@@ -53,9 +53,17 @@ const likeTweet = async (req, res) => {
 
 }
 
+const getMyTweets = async (req, res) => {
+  let tweets = await Tweet.find({
+    userId: req.user._id
+  })
+  res.send(tweets)
+}
+
 
 module.exports = {
   getTweets,
   createTweet,
-  likeTweet
+  likeTweet,
+  getMyTweets
 }

@@ -38,6 +38,8 @@ router.route('/tweet')
   .get(tweetController.getTweets)
 router.route('/tweet/like')
   .post(tweetController.likeTweet)
+router.route('/myTweets')
+  .get(authenticateMiddleware.authenticate, tweetController.getMyTweets)
 
 
 // user
